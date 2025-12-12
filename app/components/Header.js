@@ -7,8 +7,8 @@ import Link from "next/link";
  */
 export default function Header() {
     // Developer information
-    const developerName = "Goyo Cancio";
-    const jobTitle = "Software Engineer";
+    const developerName = "Sergio Barrio Martín";
+    const jobTitle = "Consultor IAM";
 
     // Social media links
     const socialLinks = [
@@ -18,24 +18,24 @@ export default function Header() {
             url: "https://linkedin.com/in/goyocancio",
             alt: "LinkedIn Profile",
         },
-        {
-            name: "GitHub",
-            icon: "/social/github.svg",
-            url: "https://github.com/McGregory99",
-            alt: "GitHub Profile",
-        },
-        {
-            name: "X",
-            icon: "/social/x.svg",
-            url: "https://x.com/goyo_is_a_dev",
-            alt: "X Profile",
-        },
-        {
-            name: "YouTube",
-            icon: "/social/youtube.svg",
-            url: "https://www.youtube.com/@goyo_is_a_dev",
-            alt: "YouTube Channel",
-        },
+        // {
+        //     name: "GitHub",
+        //     icon: "/social/github.svg",
+        //     url: "https://github.com/McGregory99",
+        //     alt: "GitHub Profile",
+        // },
+        // {
+        //     name: "X",
+        //     icon: "/social/x.svg",
+        //     url: "https://x.com/goyo_is_a_dev",
+        //     alt: "X Profile",
+        // },
+        // {
+        //     name: "YouTube",
+        //     icon: "/social/youtube.svg",
+        //     url: "https://www.youtube.com/@goyo_is_a_dev",
+        //     alt: "YouTube Channel",
+        // },
     ];
 
     return (
@@ -56,7 +56,7 @@ export default function Header() {
                         <h1 className="text-lg md:text-4xl font-bold leading-tight">
                             {developerName}
                         </h1>
-                        <p className="text-sm md:text-xl text-foreground/70">
+                        <p className="text-sm md:text-xl">
                             {jobTitle}
                         </p>
                     </div>

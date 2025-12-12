@@ -13,16 +13,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-    title: "Portfolio de Goyo Cancio | Desarrollador de Software",
+    title: "Portfolio de Sergio Barrio Martín | Consultor IAM",
     description:
-        "Portfolio profesional de Goyo Cancio, desarrollador de software con experiencia en desarrollo web y aplicaciones móviles.",
+        "Portfolio profesional de Sergio Barrio Martín, consultor IAM con experiencia en Gestion de Identidades y Accesos.",
 };
 
 export default function RootLayout({ children }) {
     return (
         <html lang="es">
             <body
-                className={`${inter.variable} ${geistMono.variable} antialiased bg-gradient-to-b from-[#fafafc] via-[#e2e2e2] to-[#cbd5e1]`}
+                //className={`${inter.variable} ${geistMono.variable} antialiased bg-gradient-to-b from-[#000000] via-[#333333] to-[#000000]`}
             >
                 {children}
             </body>

@@ -16,7 +16,18 @@ export default function ExperienceItem({ experience }) {
     } = experience;
 
     return (
-        <div className="flex flex-row gap-6 m-5 px-5 py-3 md:my-10 md:px-8 md:py-6 rounded-2xl shadow-2xl hover:shadow-lg hover:-translate-y-1 bg-gradient-to-br from-white via-gray-100 to-gray-200 border border-gray-200">
+        <div
+        className="group relative flex flex-row gap-6 m-5 px-5 py-3 md:my-10 md:px-8 md:py-6 
+        rounded-2xl 
+        shadow-2xl shadow-black/70
+        hover:shadow-2xl hover:shadow-black/90 
+        bg-[#1e293b] 
+        border border-gray-700
+        transition-all duration-300 ease-out
+        hover:scale-[1.02] hover:-translate-y-1
+        overflow-hidden"
+    >
+
             {/* Company/Job image - rounded and positioned at the top left */}
             <div className="flex-shrink-0">
                 <div className="relative w-12 h-12 md:w-24 md:h-24 rounded-lg md:rounded-2xl overflow-hidden">
@@ -60,6 +71,23 @@ export default function ExperienceItem({ experience }) {
                                 </li>
                             ))}
                         </ul>
+                        {/* Información adicional abajo */}
+                        <div
+                            className="w-full mt-4 
+                            max-h-0 opacity-0 
+                            group-hover:max-h-64 group-hover:opacity-100 
+                            transition-all duration-500 ease-in-out overflow-hidden"
+                        >
+                            <h4 className="text-xs md:text-base font-semibold mb-2">
+                                TECNOLOGÍAS USADAS:
+                            </h4>
+
+                            <ul className="list-disc pl-5 text-xs md:text-base">
+                                {technologies.map((tech, index) => (
+                                    <li key={index}>{tech}</li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
                 )}
 

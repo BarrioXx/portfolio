@@ -2,7 +2,7 @@
 
 @theme {
     /* Custom color palette - Renamed for clarity */
-    --color-background: #e6e6e6;
+    --color-background: #000000;
     --color-foreground: #313132;
     --color-accent: #e2b44f;
     --color-muted-foreground: #696762;
@@ -10,6 +10,11 @@
 
     /* You can add other theme variables here */
 }
+body {
+    color: #FFFFFF;
+    background-color: #1e293b;
+}
+
 
 /* 
 body {

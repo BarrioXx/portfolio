@@ -64,12 +64,12 @@ export default function Home() {
     ];
 
     return (
-        <div className="flex flex-col max-w-screen-md mx-auto">
+        <div className="w-full max-w-5xl mx-auto">
             <Header />
 
             {/* Work Experience Section*/}
             <section id="experience">
-                <div className="container mx-auto py-12">
+                <div className="container w-full max-w-5xl mx-auto py-12">
                     <div className="text-center">
                         <h2 className="text-2xl md:text-4xl font-bold">
                             Experiencia Laboral

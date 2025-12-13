@@ -47,7 +47,7 @@ export default function ExperienceItem({ experience }) {
                     <h3 className="text-sm md:text-xl font-bold">{title}</h3>
                     <div className="flex justify-between md:flex-wrap flex-col md:flex-row">
                         <p className="text-xs md:text-xl">{company}</p>
-                        <p className="text-xs md:text-lg text-gray-500">
+                        <p className="text-xs md:text-lg text-gray-500 md:self-start md:mt-0 mt-1">
                             {period}
                         </p>
                     </div>

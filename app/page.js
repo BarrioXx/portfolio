@@ -1,5 +1,7 @@
 import Header from "./components/Header";
+import NumberTab from "./components/NumberTab";
 import ExperienceItem from "./components/ExperienceItem";
+import Box from "./components/Box";
 import ProjectItem from "./components/ProjectItem";
 
 export default function Home() {
@@ -66,6 +68,13 @@ export default function Home() {
     return (
         <div className="w-full max-w-5xl mx-auto">
             <Header />
+            
+            {/* Number Tab Section*/}
+            <section id="starbar">
+                <div className="container w-full max-w-5xl mx-auto py-4">
+                </div>
+                <NumberTab />
+            </section>
 
             {/* Work Experience Section*/}
             <section id="experience">
@@ -85,6 +94,21 @@ export default function Home() {
                         ))}
                     </div>
                 </div>
+            </section>
+
+            {/* Box Section*/}
+            <section id="Box">
+                <div className="container w-full max-w-5xl mx-auto py-4">
+                <div className="text-center mb-6">
+                        <h2 className="text-2xl md:text-4xl font-bold">
+                            ¿Quieres comprobar mis habilidades como Consultor IAM?
+                        </h2>
+                        <p className="text-2xl md:text-4xl font-bold">
+                            ¡¡ABRE LA CAJA!!
+                        </p>
+                    </div>
+                </div>
+                <Box />
             </section>
 
             {/* Projects Section */}

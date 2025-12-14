@@ -43,7 +43,7 @@ export default function Header() {
             <div className="container mx-auto flex items-center justify-between">
                 {/* Left section: Profile picture and name */}
                 <div className="flex items-center gap-2 md:gap-8">
-                    <div className="relative w-15 h-15 md:w-30 md:h-30 rounded-full overflow-hidden border border-white shadow-xl">
+                    <div className="relative w-15 h-15 md:w-40 md:h-40 rounded-full overflow-hidden border border-white shadow-xl">
                         <Image
                             src="/profile.png"
                             alt="Profile picture"
@@ -78,7 +78,7 @@ export default function Header() {
                                 alt={link.alt}
                                 width={24}
                                 height={24}
-                                className="w-6 h-6 md:w-8 md:h-8"
+                                className="w-6 h-6 md:w-8 md:h-8 cursor-pointer hover:scale-115 transition-transform duration-300"
                             />
                         </Link>
                     ))}

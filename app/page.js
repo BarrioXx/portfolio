@@ -1,3 +1,4 @@
+"use client";
 import Header from "./components/Header";
 import NumberTab from "./components/NumberTab";
 import ExperienceItem from "./components/ExperienceItem";

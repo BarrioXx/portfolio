@@ -28,6 +28,7 @@ export default function Home() {
     
         feedback.textContent = "Sesión iniciada correctamente ✅";
         feedback.className = "text-green-400";
+        window.location.hash = "";
     }
 
     async function register() {
@@ -50,7 +51,21 @@ export default function Home() {
     
         feedback.textContent = "Usuario registrado correctamente 🎉";
         feedback.className = "text-green-400";
+        window.location.hash = "";
     }
+    function resetAuthForm() {
+        const email = document.getElementById("email");
+        const password = document.getElementById("password");
+        const feedback = document.getElementById("auth-feedback");
+    
+        if (email) email.value = "";
+        if (password) password.value = "";
+        if (feedback) {
+            feedback.textContent = "";
+            feedback.className = "mt-4 text-center text-sm";
+        }
+    }
+
     // Data for work experiences
     const experiences = [
         {

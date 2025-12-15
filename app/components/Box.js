@@ -1,51 +1,33 @@
 "use client";
+
 import Spline from "@splinetool/react-spline";
 import { supabase } from "@/lib/supabaseClient";
+import { useEffect, useState } from "react";
 
 export default function Box() {
+    const [user, setUser] = useState(null);
 
-    async function saveName() {
-        const input = document.getElementById("username-input");
-        const messageBox = document.getElementById("feedback");
-        const username = input.value.trim().toLowerCase();
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data }) => {
+            setUser(data.session?.user ?? null);
+        });
 
-        messageBox.textContent = "";
-        messageBox.className = "mt-4 text-center text-sm";
+        const {
+            data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
 
-        if (!username) {
-            messageBox.textContent = "El nombre no puede estar vacío";
-            messageBox.classList.add("text-red-400");
-            return;
-        }
-        const { error } = await supabase
-            .from("users_portfolio")
-            .insert([{ username }]);
-
-        if (error) {
-            if (error.code === "23505") {
-                messageBox.textContent = "Ese usuario ya existe";
-            } else {
-                messageBox.textContent = "Ha ocurrido un error. Inténtalo de nuevo.";
-            }
-            messageBox.classList.add("text-red-400");
-            return;
-        }
-
-
-        messageBox.textContent = `Usuario "${username}" creado correctamente 🎉`;
-        messageBox.classList.add("text-green-400");
-        input.value = "";
-    }
+        return () => subscription.unsubscribe();
+    }, []);
 
     return (
         <>
+            {/* SPLINE */}
             <div className="relative cursor-pointer hover:scale-105 transition-transform duration-300">
-
                 <Spline
                     scene="https://prod.spline.design/xj0Tk7ifI0WJuvIl/scene.splinecode"
-                    style={{
-                        pointerEvents: "none",
-                    }}
+                    style={{ pointerEvents: "none" }}
                 />
 
                 <a
@@ -54,33 +36,48 @@ export default function Box() {
                 />
             </div>
 
+            {/* MODAL */}
             <div
                 id="info"
                 className="fixed inset-0 z-50 hidden items-center justify-center 
                 bg-black/60 backdrop-blur-sm target:flex"
             >
-                <div className="relative w-[90%] max-w-lg rounded-2xl bg-[#1e293b] p-8 shadow-2xl">
+                <div className="relative w-[90%] max-w-lg rounded-2xl bg-[#1e293b] p-8 shadow-2xl text-center">
                     <a href="#" className="absolute top-4 right-4">✕</a>
-                    <h3 className="text-xl font-bold mb-4">Nombre Usuario</h3>
-                    <input
-                        id="username-input"
-                        type="text"
-                        placeholder="Escribe tu nombre"
-                        className="w-full rounded-lg bg-slate-800 border border-gray-700 
-                        px-4 py-2 mb-6 focus:outline-none focus:border-slate-400"
-                    />
-                    <button
-                        onClick={saveName}
-                        className="w-full rounded-lg bg-slate-700 py-2 
-                        hover:bg-slate-600 transition"
-                    >
-                        Guardar
-                    </button>
 
-                <div
-                    id="feedback"
-                    className="mt-4 text-center text-sm"
-                />
+                    {user ? (
+                        <>
+                            <h3 className="text-xl font-bold mb-4 text-green-400">
+                                Acceso concedido ✅
+                            </h3>
+
+                            <p className="text-gray-300">
+                                Estás logueado como:
+                            </p>
+
+                            <p className="mt-2 font-semibold text-white">
+                                {user.email}
+                            </p>
+                        </>
+                    ) : (
+                        <>
+                            <h3 className="text-xl font-bold mb-4 text-red-400">
+                                Acceso denegado ❌
+                            </h3>
+
+                            <p className="text-gray-300 mb-6">
+                                Debes iniciar sesión para acceder a esta sección
+                            </p>
+
+                            <a
+                                href="#auth"
+                                className="inline-block rounded-lg bg-slate-700 
+                                px-6 py-2 hover:bg-slate-600 transition"
+                            >
+                                Iniciar sesión
+                            </a>
+                        </>
+                    )}
                 </div>
             </div>
         </>

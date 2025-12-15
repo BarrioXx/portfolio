@@ -1,16 +1,47 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
 
-/**
- * Header component for the portfolio website
- * Displays the developer's name, profile picture, and social media links
- */
 export default function Header() {
-    // Developer information
     const developerName = "Sergio Barrio Martín";
     const jobTitle = "Consultor IAM";
 
-    // Social media links
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        // Sesión inicial
+        supabase.auth.getSession().then(({ data }) => {
+            setUser(data.session?.user ?? null);
+        });
+
+        // Escuchar login / logout
+        const {
+            data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
+
+        return () => subscription.unsubscribe();
+    }, []);
+
+    async function logout() {
+        await supabase.auth.signOut();
+    
+        // limpiar formulario auth si existe
+        if (typeof window !== "undefined") {
+            const email = document.getElementById("email");
+            const password = document.getElementById("password");
+            const feedback = document.getElementById("auth-feedback");
+    
+            if (email) email.value = "";
+            if (password) password.value = "";
+            if (feedback) feedback.textContent = "";
+        }
+    }
+
     const socialLinks = [
         {
             name: "LinkedIn",
@@ -18,38 +49,40 @@ export default function Header() {
             url: "https://linkedin.com/in/goyocancio",
             alt: "LinkedIn Profile",
         },
-        // {
-        //     name: "GitHub",
-        //     icon: "/social/github.svg",
-        //     url: "https://github.com/McGregory99",
-        //     alt: "GitHub Profile",
-        // },
-        // {
-        //     name: "X",
-        //     icon: "/social/x.svg",
-        //     url: "https://x.com/goyo_is_a_dev",
-        //     alt: "X Profile",
-        // },
-        // {
-        //     name: "YouTube",
-        //     icon: "/social/youtube.svg",
-        //     url: "https://www.youtube.com/@goyo_is_a_dev",
-        //     alt: "YouTube Channel",
-        // },
     ];
 
     return (
         <header className="border-b border-accent-yellow py-4 px-2 md:px-6">
-            <div className="absolute top-6 right-8 text-sm">
-            <a
-                href="#auth"
-                className="text-gray-300 hover:text-white transition"
-            >
-                Iniciar sesión / Registrarse
-            </a>
-        </div>
+
+            {/* AUTH */}
+            <div className="absolute top-4 right-4 md:top-6 md:right-8 z-50">
+            {user ? (
+                <div className="flex items-center gap-3 text-sm">
+                    <span className="text-gray-300 hidden md:block">
+                        {user.email}
+                    </span>
+
+                <button
+                    onClick={logout}
+                    className="rounded-lg bg-slate-700 px-3 py-1 
+                    hover:bg-slate-600 transition"
+                >
+                    Logout
+                </button>
+                </div>
+    ) : (
+        <a
+            href="#auth"
+            className="text-sm text-gray-300 hover:text-white transition"
+        >
+            Iniciar sesión / Registrarse
+        </a>
+    )}
+</div>
+
             <div className="container mx-auto flex items-center justify-between">
-                {/* Left section: Profile picture and name */}
+
+                {/* LEFT */}
                 <div className="flex items-center gap-2 md:gap-8">
                     <div className="relative w-15 h-15 md:w-40 md:h-40 rounded-full overflow-hidden border border-white shadow-xl">
                         <Image
@@ -60,6 +93,7 @@ export default function Header() {
                             priority
                         />
                     </div>
+
                     <div className="flex flex-col">
                         <h1 className="text-lg md:text-4xl font-bold leading-tight">
                             {developerName}
@@ -70,8 +104,10 @@ export default function Header() {
                     </div>
                 </div>
 
-                {/* Right section: Social media links */}
-                <div className="flex items-center gap-3">
+                {/* RIGHT */}
+                <div className="flex items-center gap-4">
+
+                    {/* SOCIAL */}
                     {socialLinks.map((link) => (
                         <Link
                             key={link.name}
@@ -86,7 +122,7 @@ export default function Header() {
                                 alt={link.alt}
                                 width={24}
                                 height={24}
-                                className="w-6 h-6 md:w-8 md:h-8 cursor-pointer hover:scale-115 transition-transform duration-300"
+                                className="w-6 h-6 md:w-8 md:h-8 cursor-pointer"
                             />
                         </Link>
                     ))}

@@ -4,8 +4,53 @@ import NumberTab from "./components/NumberTab";
 import ExperienceItem from "./components/ExperienceItem";
 import Box from "./components/Box";
 import ProjectItem from "./components/ProjectItem";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function Home() {
+
+    async function login() {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const feedback = document.getElementById("auth-feedback");
+    
+        feedback.textContent = "";
+    
+        const { error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+    
+        if (error) {
+            feedback.textContent = "Usuario o contraseña incorrectos";
+            feedback.className = "text-red-400";
+            return;
+        }
+    
+        feedback.textContent = "Sesión iniciada correctamente ✅";
+        feedback.className = "text-green-400";
+    }
+
+    async function register() {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const feedback = document.getElementById("auth-feedback");
+    
+        feedback.textContent = "";
+    
+        const { error } = await supabase.auth.signUp({
+            email,
+            password,
+        });
+    
+        if (error) {
+            feedback.textContent = error.message;
+            feedback.className = "text-red-400";
+            return;
+        }
+    
+        feedback.textContent = "Usuario registrado correctamente 🎉";
+        feedback.className = "text-green-400";
+    }
     // Data for work experiences
     const experiences = [
         {
@@ -69,6 +114,50 @@ export default function Home() {
     return (
         <div className="w-full max-w-5xl mx-auto">
             <Header />
+            <div
+            id="auth"
+            className="fixed inset-0 z-50 hidden items-center justify-center 
+            bg-black/60 backdrop-blur-sm target:flex"
+        >
+            <div className="relative w-[90%] max-w-md rounded-2xl bg-[#1e293b] p-8 shadow-2xl">
+
+                <a href="#" className="absolute top-4 right-4">✕</a>
+
+                <h3 className="text-xl font-bold mb-4">
+                    Iniciar sesión / Registrarse
+                </h3>
+
+                <input
+                    id="email"
+                    type="email"
+                    placeholder="Email"
+                    className="w-full mb-3 rounded-lg bg-slate-800 border border-gray-700 px-4 py-2"
+                />
+
+                <input
+                    id="password"
+                    type="password"
+                    placeholder="Contraseña"
+                    className="w-full mb-4 rounded-lg bg-slate-800 border border-gray-700 px-4 py-2"
+                />
+
+                <button
+                    onClick={login}
+                    className="w-full mb-2 rounded-lg bg-slate-700 py-2 hover:bg-slate-600"
+                >
+                    Iniciar sesión
+                </button>
+
+                <button
+                    onClick={register}
+                    className="w-full rounded-lg bg-slate-600 py-2 hover:bg-slate-500"
+                >
+                    Registrarse
+                </button>
+
+                <div id="auth-feedback" className="mt-4 text-center text-sm" />
+            </div>
+        </div>
             
             {/* Number Tab Section*/}
             <section id="starbar">

@@ -40,6 +40,14 @@ export default function Header() {
 
     return (
         <header className="border-b border-accent-yellow py-4 px-2 md:px-6">
+            <div className="absolute top-6 right-8 text-sm">
+            <a
+                href="#auth"
+                className="text-gray-300 hover:text-white transition"
+            >
+                Iniciar sesión / Registrarse
+            </a>
+        </div>
             <div className="container mx-auto flex items-center justify-between">
                 {/* Left section: Profile picture and name */}
                 <div className="flex items-center gap-2 md:gap-8">

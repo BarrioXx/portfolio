@@ -1,18 +1,40 @@
 "use client";
-
 import Spline from "@splinetool/react-spline";
-
-let userName = "";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function Box() {
 
-    function saveName() {
+    async function saveName() {
         const input = document.getElementById("username-input");
-        userName = input.value;
+        const messageBox = document.getElementById("feedback");
+        const username = input.value.trim().toLowerCase();
 
-        console.log("Nombre guardado:", userName);
+        messageBox.textContent = "";
+        messageBox.className = "mt-4 text-center text-sm";
 
-        window.location.hash = "";
+        if (!username) {
+            messageBox.textContent = "El nombre no puede estar vacío";
+            messageBox.classList.add("text-red-400");
+            return;
+        }
+        const { error } = await supabase
+            .from("users_portfolio")
+            .insert([{ username }]);
+
+        if (error) {
+            if (error.code === "23505") {
+                messageBox.textContent = "Ese usuario ya existe";
+            } else {
+                messageBox.textContent = "Ha ocurrido un error. Inténtalo de nuevo.";
+            }
+            messageBox.classList.add("text-red-400");
+            return;
+        }
+
+
+        messageBox.textContent = `Usuario "${username}" creado correctamente 🎉`;
+        messageBox.classList.add("text-green-400");
+        input.value = "";
     }
 
     return (
@@ -54,6 +76,11 @@ export default function Box() {
                     >
                         Guardar
                     </button>
+
+                <div
+                    id="feedback"
+                    className="mt-4 text-center text-sm"
+                />
                 </div>
             </div>
         </>

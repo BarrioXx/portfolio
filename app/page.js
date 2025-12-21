@@ -1,179 +1,262 @@
-'use client';
+"use client";
+import Header from "./components/Header";
+import NumberTab from "./components/NumberTab";
+import ExperienceItem from "./components/ExperienceItem";
+import Box from "./components/Box";
+import ProjectItem from "./components/ProjectItem";
+import { supabase } from "@/lib/supabaseClient";
 
-import { useEffect, useState } from 'react';
+export default function Home() {
 
-export default function MenuPage() {
-  const [token, setToken] = useState(null);
-  const [carrito, setCarrito] = useState([]);
-  const [modal, setModal] = useState(false);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const t = params.get('token');
-
-    if (!t) {
-      alert('QR no válido o caducado');
-      return;
+    async function login() {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const feedback = document.getElementById("auth-feedback");
+    
+        feedback.textContent = "";
+    
+        const { error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+    
+        if (error) {
+            feedback.textContent = "Usuario o contraseña incorrectos";
+            feedback.className = "text-red-400";
+            return;
+        }
+    
+        feedback.textContent = "Sesión iniciada correctamente ✅";
+        feedback.className = "text-green-400";
+        window.location.hash = "";
     }
 
-    setToken(t);
-  }, []);
-
-  const menu = [
-    { id: 1, nombre: 'Hamburguesa', precio: 8 },
-    { id: 2, nombre: 'Pizza', precio: 10 },
-    { id: 3, nombre: 'Refresco', precio: 2 }
-  ];
-
-  const addProducto = (producto) => {
-    setCarrito(prev => [...prev, producto]);
-  };
-
-  const enviarPedido = async () => {
-    if (!carrito.length) return;
-
-    const res = await fetch('/api/pedido', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token, productos: carrito })
-    });
-
-    if (res.ok) {
-      alert('Pedido enviado 🍽️');
-      setCarrito([]);
-      setModal(false);
-    } else {
-      alert('La sesión ha expirado');
+    async function register() {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const feedback = document.getElementById("auth-feedback");
+    
+        feedback.textContent = "";
+    
+        const { error } = await supabase.auth.signUp({
+            email,
+            password,
+        });
+    
+        if (error) {
+            feedback.textContent = error.message;
+            feedback.className = "text-red-400";
+            return;
+        }
+    
+        feedback.textContent = "Usuario registrado correctamente 🎉";
+        feedback.className = "text-green-400";
+        window.location.hash = "";
     }
-  };
-
-  const carritoAgrupado = carrito.reduce((acc, item) => {
-    if (!acc[item.id]) {
-      acc[item.id] = { ...item, cantidad: 1 };
-    } else {
-      acc[item.id].cantidad += 1;
+    function resetAuthForm() {
+        const email = document.getElementById("email");
+        const password = document.getElementById("password");
+        const feedback = document.getElementById("auth-feedback");
+    
+        if (email) email.value = "";
+        if (password) password.value = "";
+        if (feedback) {
+            feedback.textContent = "";
+            feedback.className = "mt-4 text-center text-sm";
+        }
     }
-    return acc;
-  }, {});
 
-  const total = Object.values(carritoAgrupado).reduce(
-    (sum, item) => sum + item.precio * item.cantidad,
-    0
-  );
+    // Data for work experiences
+    const experiences = [
+        {
+            title: "Software Engineer & Data Analyst",
+            company: "GRASP SPAIN",
+            period: "Sep. 2023 - Presente",
+            description: "",
+            // "Desarrollo de una aplicación web para la generación de medidas sintéticas de satélites en el marco de un proyecto NEOTEC financiado por el CDTI. Responsable de varias tareas de preparación y procesamiento de datos satelitales críticos para la observación terrestre, implementando soluciones técnicas innovadoras que optimizan la calidad y utilidad de la información geoespacial obtenida.",
+            projects: [
+                "Simulador de medidas de instrumentos satelitales",
+                "Preparacion de cadenas de procesado para datos geoespaciales (S5P, OLCI...)",
+            ],
+            technologies: ["Python", "Remote Sensing", "Streamlit", "Docker"],
+            image: "/company_logo/grasp.png",
+        },
+        {
+            title: "Ingeniero de Investigación en Visión Artificial",
+            company: "Universidad de Valladolid (UVa)",
+            period: "Nov. 2021 - Mar. 2023",
+            description: "",
+            projects: [
+                "Sistema de prevencion de roturas en cintas transportadoras",
+                "Prototipo contador de visitantes para eventos en espacios abiertos",
+            ],
+            technologies: [
+                "Python",
+                "Computer Vision",
+                "IoT",
+                // "Inteligencia Artificial",
+                // "Ciencia de Datos",
+                "Machine Learning",
+            ],
+            image: "/company_logo/uva.png",
+        },
+    ];
 
-  return (
-    <main style={styles.body}>
-      <header style={styles.header}>
-        <h1>Menú</h1>
-      </header>
+    // Sample project data
+    const projects = [
+        {
+            image: "/projects_logo/blockheadapp.png",
+            domain: "https://blockheadapp.com",
+        },
+        // {
+        //     image: "/projects_logo/blockheadapp.png",
+        //     domain: "https://taskmanager.goyocancio.es",
+        // },
+        // {
+        //     image: "/projects_logo/blockheadapp.png",
+        //     domain: "https://travelblog.goyocancio.es",
+        // },
+        // {
+        //     image: "/projects_logo/blockheadapp.png",
+        //     domain: "https://weatherapp.goyocancio.es",
+        // },
+        // {
+        //     image: "/projects_logo/blockheadapp.png",
+        //     domain: "https://portfolio.goyocancio.es",
+        // },
+    ];
 
-      <section style={styles.menu}>
-        {menu.map(item => (
-          <div key={item.id} style={styles.card}>
-            <h3>{item.nombre}</h3>
-            <p>{item.precio} €</p>
-            <button style={styles.btn} onClick={() => addProducto(item)}>
-              Añadir
-            </button>
-          </div>
-        ))}
-      </section>
+    return (
+        <div className="w-full max-w-5xl mx-auto">
+            <Header />
+            <div
+            id="auth"
+            className="fixed inset-0 z-50 hidden items-center justify-center 
+            bg-black/60 backdrop-blur-sm target:flex"
+        >
+            <div className="relative w-[90%] max-w-md rounded-2xl bg-[#1e293b] p-8 shadow-2xl">
 
-      <footer style={styles.footer}>
-        <button style={styles.footerBtn} onClick={() => setModal(true)}>
-          🧾 Ver pedido ({carrito.length})
-        </button>
-      </footer>
+                <a href="#" className="absolute top-4 right-4">✕</a>
 
-      {modal && (
-        <div style={styles.modalBg}>
-          <div style={styles.modal}>
-            <h2>Tu pedido</h2>
-            <ul style={{ listStyle: 'none', padding: 0 }}>
-            {Object.values(carritoAgrupado).map(item => (
-                <li key={item.id} style={{ marginBottom: '0.5rem' }}>
-                <strong>{item.nombre}</strong> x{item.cantidad}
-                {' — '}
-                {item.precio * item.cantidad} €
-                </li>
-            ))}
-            </ul>
+                <h3 className="text-xl font-bold mb-4">
+                    Iniciar sesión / Registrarse
+                </h3>
 
-            <hr />
+                <input
+                    id="email"
+                    type="email"
+                    placeholder="Email"
+                    className="w-full mb-3 rounded-lg bg-slate-800 border border-gray-700 px-4 py-2"
+                />
 
-            <p style={{ fontSize: '18px', fontWeight: 'bold' }}>
-            Total: {total} €
-            </p>
-            <button style={styles.btn} onClick={enviarPedido}>
-              Enviar pedido
-            </button>
-            <button style={styles.btn} onClick={() => setModal(false)}>
-              Cancelar
-            </button>
-          </div>
+                <input
+                    id="password"
+                    type="password"
+                    placeholder="Contraseña"
+                    className="w-full mb-4 rounded-lg bg-slate-800 border border-gray-700 px-4 py-2"
+                />
+
+                <button
+                    onClick={login}
+                    className="w-full mb-2 rounded-lg bg-slate-700 py-2 hover:bg-slate-600"
+                >
+                    Iniciar sesión
+                </button>
+
+                <button
+                    onClick={register}
+                    className="w-full rounded-lg bg-slate-600 py-2 hover:bg-slate-500"
+                >
+                    Registrarse
+                </button>
+
+                <div id="auth-feedback" className="mt-4 text-center text-sm" />
+            </div>
         </div>
-      )}
-    </main>
-  );
-}
+            
+            {/* Number Tab Section*/}
+            <section id="starbar">
+                <div className="container w-full max-w-5xl mx-auto py-4">
+                </div>
+                <NumberTab />
+            </section>
 
-/* ⬇️⬇️⬇️ ESTO ES LO QUE FALTABA ⬇️⬇️⬇️ */
-const styles = {
-  body: {
-    fontFamily: 'system-ui, sans-serif',
-    background: '#f5f5f5',
-    minHeight: '100vh',
-    paddingBottom: '90px'
-  },
-  header: {
-    background: '#111',
-    color: 'white',
-    padding: '1rem',
-    textAlign: 'center'
-  },
-  menu: {
-    padding: '1rem',
-    color: 'black'
-  },
-  card: {
-    background: 'white',
-    borderRadius: '12px',
-    padding: '1rem',
-    marginBottom: '1rem'
-  },
-  btn: {
-    width: '100%',
-    padding: '0.7rem',
-    fontSize: '16px',
-    marginTop: '0.5rem'
-  },
-  footer: {
-    position: 'fixed',
-    bottom: 0,
-    width: '100%',
-    background: '#111',
-    padding: '1rem'
-  },
-  footerBtn: {
-    width: '100%',
-    fontSize: '18px',
-    padding: '0.8rem',
-    background: '#28a745',
-    color: 'black',
-    border: 'none',
-    borderRadius: '10px'
-  },
-  modalBg: {
-    position: 'fixed',
-    inset: 0,
-    color: 'black',
-    background: 'rgba(0,0,0,0.6)'
-  },
-  modal: {
-    background: 'white',
-    width: '90%',
-    margin: '10% auto',
-    padding: '1rem',
-    borderRadius: '12px'
-  }
-};
+            {/* Work Experience Section*/}
+            <section id="experience">
+                <div className="container w-full max-w-5xl mx-auto py-12">
+                    <div className="text-center">
+                        <h2 className="text-2xl md:text-4xl font-bold">
+                            Experiencia Laboral
+                        </h2>
+                    </div>
+
+                    <div className="space-y-8">
+                        {experiences.map((experience, index) => (
+                            <ExperienceItem
+                                key={index}
+                                experience={experience}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Box Section*/}
+            <section id="Box">
+                <div className="container w-full max-w-5xl mx-auto py-4">
+                <div className="text-center mb-6">
+                        <h2 className="text-2xl md:text-4xl font-bold">
+                            ¿Quieres comprobar mis habilidades como Consultor IAM?
+                        </h2>
+                        <p className="text-2xl md:text-4xl font-bold">
+                            ¡¡ABRE LA CAJA!!
+                        </p>
+                    </div>
+                </div>
+                <Box />
+            </section>
+
+            {/* Projects Section */}
+            <section id="projects">
+                <div className="container mx-auto py-12 px-10">
+                    <div className="text-center mb-6">
+                        <h2 className="text-2xl md:text-4xl font-bold">
+                            Proyectos Personales
+                        </h2>
+                    </div>
+
+                    <p className="text-xs md:text-base mb-2 text-justify">
+                        De manera paralela a los trabajos que he ido
+                        desempeñando, he desarrollado varios proyectos
+                        personales tanto para probarme a mí mismo y ver de qué
+                        soy capaz, como para aplicar mis conocimientos y
+                        aprender nuevas tecnologías.
+                    </p>
+                    <p className="text-xs md:text-base mb-8  text-justify">
+                        Aquí puedes ver algunos de ellos:
+                    </p>
+
+                    {/* Projects row */}
+                    <div className="flex flex-wrap gap-6 md:gap-8 justify-center">
+                        {/* Restore the map */}
+                        {projects.map((project, index) => {
+                            if (!project || !project.image || !project.domain) {
+                                return null; // Keep the check and null return
+                            }
+                            return (
+                                <div key={index} className="">
+                                    <ProjectItem project={project} />
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </section>
+
+            <footer className="text-center text-xs md:text-sm text-gray-500">
+                © {new Date().getFullYear()} Goyo Cancio. Todos los derechos
+                reservados.
+            </footer>
+        </div>
+    );
+}
